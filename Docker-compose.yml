@@ -1,8 +1,31 @@
-version: '3.8'
+version: '3.8'  # Thêm phiên bản Docker Compose
 
 services:
   app:
     build: .
     ports:
-      - "8080:8080"
+      - "8080:8080"  # Cổng cho ứng dụng Spring Boot
     environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/store?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_PROFILES_ACTIVE: docker  # Thêm profile nếu cần
+      SERVER_SERVLET_CONTEXT_PATH: /store
+    depends_on:  # Đảm bảo app khởi động sau MySQL
+      - mysql
+
+
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    volumes:
+      - Tony-stark-mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: store
+
+volumes:
+  Store-mysql-data: {}
+
+
